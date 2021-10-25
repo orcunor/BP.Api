@@ -1,3 +1,4 @@
+using BP.Api.BackgroundServices;
 using BP.Api.Extensions;
 using BP.Api.Models;
 using BP.Api.Services;
@@ -34,19 +35,22 @@ namespace BP.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers()
-                .AddFluentValidation(i => i.RunDefaultMvcValidationAfterFluentValidationExecutes = false);
+            services.AddControllers();
+            //services.AddControllers()
+            //    .AddFluentValidation(i => i.RunDefaultMvcValidationAfterFluentValidationExecutes = false);
 
 
 
             services.AddHealthChecks();
 
+            services.AddHostedService<DateTimeLogWriter> ();
           
             services.ConfigureMapping();
 
             services.AddScoped<IContactService, ContactService>();
 
             services.AddTransient<IValidator<ContactDTO>, ContactValidator>();
+
 
             services.AddHttpClient("garantiapi", config =>
              {
@@ -73,7 +77,7 @@ namespace BP.Api
 
             app.UseCustomHealthCheck();
 
-            app.UseResponseCaching();
+            app.UseResponseCaching(); // cacheleme için controllerda attribute ekliyoruz
 
             app.UseHttpsRedirection();
 

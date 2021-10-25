@@ -11,7 +11,7 @@ namespace BP.Api.Extensions
 {
     public static class ConfigureMappingProfileExtension
     {
-        public static IServiceCollection ConfigureMapping(this IServiceCollection service)
+        public static IServiceCollection ConfigureMapping(this IServiceCollection service) // startup da çağır
         {
             var mappingConfig = new MapperConfiguration(i => i.AddProfile(new AutoMapperMappigProfile()));
 
@@ -23,15 +23,31 @@ namespace BP.Api.Extensions
         }
     }
 
-    public class AutoMapperMappigProfile : Profile
+    public class AutoMapperMappigProfile : Profile   // Mapping işlemi
     {
         public AutoMapperMappigProfile()
         {
+
+            //var config = new MapperConfiguration(cfg => {
+            //    cfg.CreateMap<Contact, ContactDTO>()
+            //        //OrderId is different so map them using For Member
+            //        .ForMember(dest => dest.FullName, act => act.MapFrom(src => src.FirstName + " "+ src.LastName))
+            //        //Customer is a Complex type, so Map Customer to Simple type using For Member
+
+            //        .ForMember(dest => dest.Id, act => act.MapFrom(src => src.Id))
+            //        .ReverseMap();
+            //});
+
             CreateMap<Contact, ContactDTO>()
-                .ForMember(x=> x.FullName, y => y.MapFrom( z => z.FirstName + " "+ z.LastName))
-                .ForMember(x => x.Id, y=> y.MapFrom(z=> z.Id))
+                .ForMember(x => x.FullName, y => y.MapFrom(z => z.FirstName + " " + z.LastName))
+                .ForMember(x => x.Id, y => y.MapFrom(z => z.Id))
                 .ReverseMap()
                 ;
+
+
+
+
+
         }
     }
 }

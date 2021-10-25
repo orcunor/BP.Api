@@ -17,12 +17,10 @@ namespace BP.Api
             get
             {
                 string env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
-
-
                 return new ConfigurationBuilder()
                     .SetBasePath(System.IO.Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", optional: false) // opsiyonel değil zorunlu olarak oku
-                    .AddJsonFile($"appsettings.{env}.json", optional: true)
+                    .AddJsonFile($"appsettings.{env}.json", optional: true) // ilk buna bak eğer böyle bir dosya yoksa yukarıdakini oku
                     .AddEnvironmentVariables()
                     .Build();
               

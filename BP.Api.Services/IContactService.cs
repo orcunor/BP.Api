@@ -10,5 +10,7 @@ namespace BP.Api.Services
     public interface IContactService
     {
         public ContactDTO GetContactById(int id);
+        public List<ContactDTO> GetContacts();
+        public void CreateContact(ContactDTO contactDTO);
     }
 }

@@ -23,25 +23,53 @@ namespace BP.Api.Controllers
             this._contactService = contactService;
         }
 
+
+
         [HttpGet]
-        public string Get()
+        public IActionResult GetAllContacts()
         {
-            return _configuration["ReadMe"].ToString();
+            var contacts = _contactService.GetContacts();
+            if (contacts != null)
+            {
+                return Ok(contacts);
+            }
+
+            return NotFound();
+            //return Ok(_configuration["ReadMe"].ToString());
         }
 
-        [ResponseCache(Duration = 10)] // ilk istek geldiğinde bu metod çalışıcak bu cache tutulacak 10 saniye boyunca cache'den alacak 10 sniye içinde tekrar çağırılsa önbellekten cevap vericek bu metoda girmicek
+
+
+        [ResponseCache(Duration = 10)] // ilk istek geldiğinde bu metod çalışıcak bu cache tutulacak 10 saniye boyunca cache'den alacak 10 sniye içinde tekrar çağırılsa önbellekten cevap vericek bu metoda girmicek, 10 saniyenin sonunda tekrar istek gelirse tekrar bu metoda girecek
         [HttpGet("{id}")]
-        public ContactDTO GetContactById(int id)
+        public ActionResult<ContactDTO> GetContactById(int id)
         {
-            return _contactService.GetContactById(id);
+            var contact = _contactService.GetContactById(id);
+            if (contact != null)
+            {
+                return Ok(contact);
+            }
+            return NotFound();
         }
 
-        [HttpPost("")]
-        public ContactDTO CreateContact(ContactDTO contact)
+
+
+        [HttpPost]
+        public ActionResult<ContactDTO> CreateContact(ContactDTO contact)
         {
+            _contactService.CreateContact(contact);
             // create contact on database interface ile metodu getir
 
-            return contact;
+            //return Ok();
+            return CreatedAtAction(nameof(GetContactById), new { id = contact.Id }, contact);
+        }
+
+
+         [HttpDelete]
+        public IActionResult DeleteContact(int id)
+        {
+            // interface ' e metod ekle class içinden listeden sil
+            return Ok();
         }
     }
 }
