@@ -3,6 +3,7 @@ using BP.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace BP.Api.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IContactService _contactService;
+        private readonly ILogger<ContactController> _logger;
 
-        public ContactController(IConfiguration configuration, IContactService contactService)
+        public ContactController(IConfiguration configuration, IContactService contactService, ILogger<ContactController> logger)
         {
             this._configuration = configuration;
             this._contactService = contactService;
+            this._logger = logger;
         }
 
 
@@ -28,14 +31,21 @@ namespace BP.Api.Controllers
         [HttpGet]
         public IActionResult GetAllContacts()
         {
-            var contacts = _contactService.GetContacts();
-            if (contacts != null)
-            {
-                return Ok(contacts);
-            }
+            _logger.LogInformation("LogInformation --> GetAllContacts Method is called");
+            _logger.LogTrace("LogTrace --> GetAllContacts Method is called");
+            _logger.LogDebug("LogDebug --> GetAllContacts Method is called");
+            _logger.LogWarning("LogWarning --> GetAllContacts Method is called");
+            _logger.LogError("LogError --> GetAllContacts Method is called");
 
-            return NotFound();
-            //return Ok(_configuration["ReadMe"].ToString());
+            //var contacts = _contactService.GetContacts();
+            //if (contacts != null)
+            //{
+
+            //    return Ok(contacts);
+            //}
+
+            //return NotFound();
+            return Ok(_configuration["ReadMe"].ToString());
         }
 
 

@@ -1,4 +1,4 @@
-using BP.Api.BackgroundServices;
+﻿using BP.Api.BackgroundServices;
 using BP.Api.Extensions;
 using BP.Api.Models;
 using BP.Api.Services;
@@ -43,13 +43,15 @@ namespace BP.Api
 
             services.AddHealthChecks();
 
-            services.AddHostedService<DateTimeLogWriter> ();
+            services.AddHostedService<DateTimeLogWriter>(); // loglama background service
+
+            services.AddLogging(); // 
           
-            services.ConfigureMapping();
+            services.ConfigureMapping(); // contact, contactDTO mapleme fonksiyonumuz
 
             services.AddScoped<IContactService, ContactService>();
 
-            services.AddTransient<IValidator<ContactDTO>, ContactValidator>();
+            services.AddTransient<IValidator<ContactDTO>, ContactValidator>(); // validasyon işlemi
 
 
             services.AddHttpClient("garantiapi", config =>
@@ -57,7 +59,7 @@ namespace BP.Api
                  config.BaseAddress = new Uri("http://wwww.garanti.com");
                  config.DefaultRequestHeaders.Add("Authorization", "Bearer 12312341234");
 
-             });
+             }); // test için bir apiyi çağrıyor istek atıyor yani
 
             services.AddSwaggerGen(c =>
             {
@@ -75,9 +77,9 @@ namespace BP.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BP.Api v1"));
             }
 
-            app.UseCustomHealthCheck();
+            app.UseCustomHealthCheck(); // healtcheck ekledik extensionsda ki classımızdan çağırdık
 
-            app.UseResponseCaching(); // cacheleme i�in controllerda attribute ekliyoruz
+            app.UseResponseCaching(); // cacheleme için controllerda attribute ekliyoruz
 
             app.UseHttpsRedirection();
 

@@ -12,7 +12,6 @@ namespace BP.Api.Services
 {
     public class ContactService : IContactService
     {
-
         private static List<Contact> contacts = new List<Contact>
         {
                new Contact{Id = 1, FirstName = "Orçun", LastName = "Or"},
@@ -33,52 +32,71 @@ namespace BP.Api.Services
 
         public void CreateContact(ContactDTO contactDTO)
         {
-            if (contactDTO != null)
+            try
             {
-                var firstName = contactDTO.FullName.Split(" ")[0];
-                var lastName = contactDTO.FullName.Split(" ")[1];
-                var contact = new Contact
+                if (contactDTO != null)
                 {
-                    Id = contactDTO.Id,
-                    FirstName = firstName,
-                    LastName = lastName
-                };
-                //Contact contact = _mapper.Map<Contact>(contactDTO);
-                contacts.Add(contact);
+                    var contact = new Contact
+                    {
+                        Id = contactDTO.Id,
+                        FirstName = contactDTO.FullName.Split(" ")[0],
+                        LastName = contactDTO.FullName.Split(" ")[1]
+                    };
+                    //Contact contact = _mapper.Map<Contact>(contactDTO);
+                    contacts.Add(contact);
+                }
             }
+            catch (Exception)
+            {
+                // loglama yapılabilinir 
+            }
+           
         }
 
         public ContactDTO GetContactById(int id)
         {
-            var contact = contacts.FirstOrDefault(x => x.Id == id);
+            try
+            {
+                var contact = contacts.FirstOrDefault(x => x.Id == id);
 
-            //var dbContact = GetDummyContact();   // veritabanından kaydın getirilmesi işlemi yapılmalı normalde şimdilik fake data yarattım.
+                //var dbContact = GetDummyContact();   // veritabanından kaydın getirilmesi işlemi yapılmalı normalde şimdilik fake data yarattım.
 
-           // var client =  _httpClientFactory.CreateClient("garantiapi"); // startup services de garantiapi yi set ettik 
+                // var client =  _httpClientFactory.CreateClient("garantiapi"); // startup services de garantiapi yi set ettik 
 
-            ContactDTO resultContact = _mapper.Map<ContactDTO>(contact); // db contact'ı  contactDTO a çeviriyor
+                ContactDTO resultContact = _mapper.Map<ContactDTO>(contact); // db contact'ı  contactDTO a çeviriyor
 
-            return resultContact;
-
+                return resultContact;
+            }
+            catch (Exception)
+            { 
+            }
+            return null;
         }
 
         public List<ContactDTO> GetContacts()
         {
-            var contacts = GetAllContacts(); // fake datamız
-
-            List<ContactDTO> contactDTOs = new List<ContactDTO>();
-
-            foreach (var item in contacts)
+            try
             {
-                contactDTOs.Add(_mapper.Map<ContactDTO>(item)); // mapleme işlemi
-            }
+                var contacts = GetAllContacts(); // fake datamız
 
-            return contactDTOs;
+                List<ContactDTO> contactDTOs = new List<ContactDTO>();
+
+                foreach (var item in contacts)
+                {
+                    contactDTOs.Add(_mapper.Map<ContactDTO>(item)); // mapleme işlemi
+                }
+
+                return contactDTOs;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
            
         }
 
 
-        #region Fake data olusturma fonksiyonları
+        #region Fake data fonksiyonları
         private Contact GetDummyContact()
         {
             //return new Contact
@@ -92,11 +110,9 @@ namespace BP.Api.Services
 
         private List<Contact> GetAllContacts()
         {
-           // return new List<Contact>();
+            //return new List<Contact>();
             return contacts;
         }
-
-      
 
         #endregion
     }

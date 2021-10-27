@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using BP.Api.Logging;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace BP.Api
 {
     public class Program
     {
-
+        private static string FileName ="Logs.txt";
         private static IConfiguration Configuration
         {
             get
@@ -29,11 +31,28 @@ namespace BP.Api
 
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                ////.WriteTo.Debug()
+                //.WriteTo.File(FileName)// filePath
+                .CreateLogger();
+
+
             CreateHostBuilder(args).Build().Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .UseSerilog() // serilogu kullan diyorum
+
+            //.ConfigureLogging(config =>
+            //{
+            //    config.ClearProviders();
+            //    config.SetMinimumLevel(LogLevel.Debug);
+            //   // config.AddConsole();
+            //   // config.AddDebug();
+            //    config.AddProvider(new MyCustomLoggerFactory()); // kendi custom logger classımı kullanıyorum.
+            //})
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseConfiguration(Configuration); // burda okutturuyorum

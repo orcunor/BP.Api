@@ -10,19 +10,24 @@ namespace BP.Api.BackgroundServices
     public class DateTimeLogWriter : IHostedService , IDisposable
     {
         private Timer timer;
-        public Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken) // uygulama ayağa kalktığında çağrılır
         {
-            Console.WriteLine($"{nameof(DateTimeLogWriter)} Service Started...");
+            try
+            {
+                Console.WriteLine($"{nameof(DateTimeLogWriter)} Service Started...");
 
-            timer = new Timer(WriteDateTimeOnLog,null,TimeSpan.Zero,TimeSpan.FromSeconds(1));
+                timer = new Timer(WriteDateTimeOnLog, null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
 
-            //while (!cancellationToken.IsCancellationRequested) // cancel etmediği sürece yapıcaz bu işi
-            //{
-            //    WriteDateTimeOnLog();
-            //    await Task.Delay(1000);
-            //}
+                //while (!cancellationToken.IsCancellationRequested) // cancel etmediği sürece yapıcaz bu işi
+                //{
+                //    WriteDateTimeOnLog();
+                //    await Task.Delay(1000);
+                //}
 
-            return Task.CompletedTask;
+                return Task.CompletedTask;
+            }
+            catch { }
+            return null;
         }
 
         private void WriteDateTimeOnLog(object state)
@@ -30,19 +35,28 @@ namespace BP.Api.BackgroundServices
             Console.WriteLine($"DateTime is {DateTime.Now.ToLongTimeString()}");
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken cancellationToken) // uygulama kapandığında çağrılır
         {
-            Console.WriteLine($"{nameof(DateTimeLogWriter)} Service Stopped...");
+            try
+            {
+                Console.WriteLine($"{nameof(DateTimeLogWriter)} Service Stopped...");
 
-            timer?.Change(Timeout.Infinite, 0); // timer durucak
-            DisposeTimer();
-            return Task.CompletedTask;
+                timer?.Change(Timeout.Infinite, 0); // timer durucak
+                DisposeTimer();
+                return Task.CompletedTask;
+            }
+            catch { }
+            return null;
         }
 
         public void Dispose()
         {
-
-            DisposeTimer();
+            try
+            {
+                DisposeTimer();
+            }
+            catch { }
+           
         }
 
         private void DisposeTimer()
